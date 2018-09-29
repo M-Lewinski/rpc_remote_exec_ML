@@ -64,7 +64,7 @@ int commandSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,
 			clnt_perror (clnt, "call failed");
 		}
 		printf("otrzymałem %d \n",result_2->lastCorrectPackageNR);
-	}while(result_2->lastCorrectPackageNR<=(packetAmount-1));
+	}while(result_2->lastCorrectPackageNR<=(packetAmount));
 	
 	result=result_2->lastCorrectPackageNR+1;
 	free(runexecfunction_1_arg.data);
