@@ -13,6 +13,18 @@ typedef struct LLnode {
 list * head = NULL;
 list * end = NULL;
 
+void printListNode(list* node){
+                printf("ID - %ld | packnr - %d | pid - %d\n",node->ID,node->inputpacketnr,node->pid);
+
+}
+
+void printList(){
+        list * iterator = head;
+        while(iterator!=NULL){
+            printListNode(iterator);
+            iterator=iterator->next;
+        }
+}
 
 void addToList(u_long ID){
     list * tmp = malloc(sizeof(list));
@@ -52,7 +64,7 @@ list* searchInList(u_long ID){
         if(iterator==NULL){
             return NULL;
         }
-        if(iterator->ID=ID){
+        if(iterator->ID==ID){
             return iterator;
         }else{
             iterator=iterator->next;

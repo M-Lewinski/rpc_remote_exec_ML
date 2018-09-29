@@ -14,3 +14,5 @@ typedef struct LLnode list;
 void addToList(u_long ID);
 void removeFromList(u_long ID);
 list* searchInList(u_long ID);
+void printListNode(list* node);
+void printList();
