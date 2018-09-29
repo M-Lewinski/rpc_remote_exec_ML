@@ -1,0 +1,1 @@
+cat ls_COLORS=rs=0:di=01;34:ln
