@@ -152,6 +152,7 @@ void sendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int bu
 	packageNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
 	packageNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
 	packageNR=inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
+	packageNR=runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
 
 	printf("==============================%d\n",packageNR);
 //	printf("test2 - %s\n",clnt);

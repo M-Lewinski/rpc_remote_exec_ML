@@ -1,5 +1,8 @@
 #include "rpc_remote_exec_ML.h"
 #include "rpc_remote_exec_ML_LL.h"
+#include <unistd.h>
+#include <sys/stat.h> 
+#include <fcntl.h>
 
 int fileExists(const char *filename)
 {
@@ -23,15 +26,31 @@ void caseINPUT_START(runExecStructRequest *argp,runExecStructResponse  *result){
 		sprintf(IDstring,"%lu",argp->ID);
 		strcpy(filenameWithoutEnd,"data/");
 		strcat(filenameWithoutEnd,IDstring);
+
+		
 		strcpy(filenameWithEnd,filenameWithoutEnd);	
 		strcat(filenameWithEnd,"_input.txt");	
-
 		if(fileExists(filenameWithEnd) && remove(filenameWithEnd) == -1)
         perror("No input file to remove");
+
+
 		strcpy(filenameWithEnd,filenameWithoutEnd);	
 		strcat(filenameWithEnd,"_function.txt");	
 		if(fileExists(filenameWithEnd) && remove(filenameWithEnd) == -1)
         perror("No function file to remove");
+
+		
+		strcpy(filenameWithEnd,filenameWithoutEnd);	
+		strcat(filenameWithEnd,"_output.txt");	
+		if(fileExists(filenameWithEnd) && remove(filenameWithEnd) == -1)
+        perror("No output file to remove");
+		
+		
+		strcpy(filenameWithEnd,filenameWithoutEnd);	
+		strcat(filenameWithEnd,"_error.txt");	
+		if(fileExists(filenameWithEnd) && remove(filenameWithEnd) == -1)
+        perror("No error file to remove");
+		
 		//printList();
 }
 void saveToFileInput(runExecStructRequest *argp,runExecStructResponse  *result,char *fileNameEnd){
@@ -67,6 +86,61 @@ void caseINPUT_INPUT(runExecStructRequest *argp,runExecStructResponse  *result){
 
 		saveToFileInput(argp,result,"_input.txt");
 }
+
+void run(list* node){
+	FILE *functionfile;
+	int inputfile;
+	int outputfile;
+	int errorfile;
+
+	char filenameWithoutEnd[180];
+	char filenamefunctionfile[180];
+	char filenameInputfile[180];
+	char filenameOutputfile[180];
+	char filenameErrorfile[180];
+
+
+	char functionToRun[1024];
+
+	char IDstring[80];
+
+	sprintf(IDstring,"%lu",node->ID);
+	strcpy(filenameWithoutEnd,"data/");
+	strcat(filenameWithoutEnd,IDstring);
+	strcpy(filenamefunctionfile,filenameWithoutEnd);	
+	strcat(filenamefunctionfile,"_function.txt");
+	strcpy(filenameInputfile,filenameWithoutEnd);	
+	strcat(filenameInputfile,"_input.txt");
+	strcpy(filenameOutputfile,filenameWithoutEnd);	
+	strcat(filenameOutputfile,"_output.txt");
+	strcpy(filenameErrorfile,filenameWithoutEnd);	
+	strcat(filenameErrorfile,"_error.txt");
+		
+	/*if(fileExists(filenameInputfile)){
+
+	}*/
+
+	functionfile = fopen( filenamefunctionfile , "r");
+	outputfile = open( filenameOutputfile, O_WRONLY | O_CREAT, 0644);
+	errorfile = open( filenameErrorfile, O_WRONLY | O_CREAT, 0644);
+	if (functionfile) {
+		fgets(functionToRun, 180, functionfile);
+		dup2(outputfile,1);
+		dup2(errorfile,2);
+
+		if(fileExists(filenameInputfile)){
+			inputfile = open( filenameInputfile, O_RDONLY);
+			dup2(inputfile,0);
+		}
+		printf("uruchomienie funkcji: %s\n",functionToRun);
+		system(functionToRun);
+
+
+		fclose(functionfile);
+	}	
+	exit(1);
+}
+
 void caseINPUT_END(runExecStructRequest *argp,runExecStructResponse  *result){
 		list* node;
 
@@ -74,9 +148,9 @@ void caseINPUT_END(runExecStructRequest *argp,runExecStructResponse  *result){
 		node = searchInList(argp->ID);
 		if(node->inputpacketnr==argp->packageNR-1){
 			node->inputpacketnr=argp->packageNR;
-			/*if ((node->pid = fork()) == 0){
-				
-			}*/		
+			if ((node->pid = fork()) == 0){
+				run(node);
+			}		
 		
 		
 		}
