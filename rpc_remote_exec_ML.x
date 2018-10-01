@@ -1,7 +1,6 @@
 struct runExecStructRequest{
 int dataSize;
 unsigned long ID;
-int packetAmount;
 int packageNR;
 int packageType;
 string data<>;
@@ -15,13 +14,15 @@ int lastCorrectPackageNR;
 struct getExecStructRequest{
 unsigned long ID;
 int packageNR;
+int packageNRFromType;
+int packageType;
 };
 
 struct getExecStructResponse{
 int dataSize;
-int packetAmount;
 int packageNR;
 int packageType;
+int end;
 string data<>;
 };
 

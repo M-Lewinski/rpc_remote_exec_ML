@@ -4,8 +4,9 @@
  * as a guideline for developing your own functions.
  */
 
-#include "rpc_remote_exec_ML.h"
-#include "rpc_remote_exec_ML_LL.h"
+#include "rpc_remote_exec_ML_server_startSession.h"
+#include "rpc_remote_exec_ML_server_runExecFunction.h"
+#include "rpc_remote_exec_ML_server_getExecFunction.h"
 /*
 u_long maxCurrentID=0;
 
@@ -65,7 +66,7 @@ runexecfunction_1_svc(runExecStructRequest *argp, struct svc_req *rqstp)
 
 	
 	return &result;
-}*/
+}
 
 getExecStructResponse *
 getexecfunction_1_svc(getExecStructRequest *argp, struct svc_req *rqstp)
@@ -74,7 +75,7 @@ getexecfunction_1_svc(getExecStructRequest *argp, struct svc_req *rqstp)
 
 	/*
 	 * insert server code here
-	 */
+
 
 	return &result;
-}
+}*/

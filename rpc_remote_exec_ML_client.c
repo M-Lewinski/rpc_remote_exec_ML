@@ -7,6 +7,8 @@
 #include "rpc_remote_exec_ML.h"
 #include "rpc_remote_exec_ML_client_startSession.h"
 #include "rpc_remote_exec_ML_client_runExecFunction.h"
+#include "rpc_remote_exec_ML_def.h"
+#include "rpc_remote_exec_ML_client_getExecFunction.h"
 
 CLIENT* createClient(char *host){
 	CLIENT *clnt;
@@ -68,6 +70,7 @@ main (int argc, char *argv[])
 	CLIENT *clnt;
 	u_long session_ID;
 	char *functionToExec;
+	int packagerNR=0;
 
 	int sendBufferSize=1024;
 
@@ -86,7 +89,8 @@ main (int argc, char *argv[])
 
 	session_ID=startsession(clnt);
 
-	sendFunctionToRun(clnt,session_ID,functionToExec,sendBufferSize);
+	sendFunctionToRun(clnt,session_ID,functionToExec,&packagerNR,sendBufferSize);
+	getresultFromRemoteFuntion(clnt,session_ID,&packagerNR);
 
 	destroyClient(clnt);
 

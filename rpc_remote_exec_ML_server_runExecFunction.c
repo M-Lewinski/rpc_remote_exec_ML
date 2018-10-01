@@ -1,22 +1,31 @@
 #include "rpc_remote_exec_ML.h"
+#ifndef ML_LL
+#define ML_LL
 #include "rpc_remote_exec_ML_LL.h"
+#endif
 #include <unistd.h>
 #include <sys/stat.h> 
 #include <fcntl.h>
+#include "rpc_remote_exec_ML_def.h"
 
-int fileExists(const char *filename)
-{
-
-   FILE *fp = fopen (filename, "r");
-   if (fp!=NULL) fclose (fp);
-
-   return (fp!=NULL);
-}
 
 void caseINPUT_START(runExecStructRequest *argp,runExecStructResponse  *result){
 		printf("INPUT_START\n");
 		addToList(argp->ID);
+		list* node= searchInList(argp->ID);
+		node->bufSize=argp->dataSize;
 		result->lastCorrectPackageNR=0;
+
+
+		if(fileExists(node->inputFilename) && remove(node->inputFilename) == -1)
+        perror("No input file to remove");
+		if(fileExists(node->functionFilename) && remove(node->functionFilename) == -1)
+        perror("No function file to remove");
+		if(fileExists(node->outputFilename) && remove(node->outputFilename) == -1)
+        perror("No output file to remove");
+		if(fileExists(node->errorFilename) && remove(node->errorFilename) == -1)
+        perror("No error file to remove");
+		/*		
 		//usuwanie ewentualnie istenijacego pliku;
 		char filenameWithoutEnd[180];
 		char filenameWithEnd[180];
@@ -50,7 +59,7 @@ void caseINPUT_START(runExecStructRequest *argp,runExecStructResponse  *result){
 		strcat(filenameWithEnd,"_error.txt");	
 		if(fileExists(filenameWithEnd) && remove(filenameWithEnd) == -1)
         perror("No error file to remove");
-		
+		*/
 		//printList();
 }
 void saveToFileInput(runExecStructRequest *argp,runExecStructResponse  *result,char *fileNameEnd){
@@ -67,17 +76,17 @@ void saveToFileInput(runExecStructRequest *argp,runExecStructResponse  *result,c
 		strcat(filename,IDstring);
 		strcat(filename,fileNameEnd);
 
-		if(node->inputpacketnr==argp->packageNR-1){
-			node->inputpacketnr=argp->packageNR;
+		if(node->packetnr==argp->packageNR-1){
+			node->packetnr=argp->packageNR;
 			pFile = fopen(filename, "a");
 			//zapisywanie do pliku?
 			printf("tresc funkcji - %s\n",argp->data);
-			fprintf(pFile, argp->data);
+			fprintf(pFile,"%s", argp->data);
 			fclose(pFile);
 		}else{
 			printf("zly numer\n");
 		}
-		result->lastCorrectPackageNR=node->inputpacketnr;
+		result->lastCorrectPackageNR=node->packetnr;
 }
 void caseINPUT_FUNCTION(runExecStructRequest *argp,runExecStructResponse  *result){
 		saveToFileInput(argp,result,"_function.txt");
@@ -137,7 +146,9 @@ void run(list* node){
 
 
 		fclose(functionfile);
-	}	
+	}
+	printf("zakonczenie funkcji\n");
+	
 	exit(1);
 }
 
@@ -146,15 +157,15 @@ void caseINPUT_END(runExecStructRequest *argp,runExecStructResponse  *result){
 
 		printf("INPUT_END\n");
 		node = searchInList(argp->ID);
-		if(node->inputpacketnr==argp->packageNR-1){
-			node->inputpacketnr=argp->packageNR;
+		if(node->packetnr==argp->packageNR-1){
+			node->packetnr=argp->packageNR;
 			if ((node->pid = fork()) == 0){
 				run(node);
 			}		
 		
 		
 		}
-		result->lastCorrectPackageNR=node->inputpacketnr;
+		result->lastCorrectPackageNR=node->packetnr;
 }
 
 runExecStructResponse *

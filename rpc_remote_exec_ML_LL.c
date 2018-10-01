@@ -1,20 +1,30 @@
 #include <stdlib.h>
 #include "rpc_remote_exec_ML.h"
+#include "rpc_remote_exec_ML_LL.h"
 
-
+/*
 typedef struct LLnode {
     u_long ID;
     int inputpacketnr;
     int pid;
     struct LLnode * next;
     struct LLnode * prev;
-} list;
+} list;*/
 
 list * head = NULL;
 list * end = NULL;
 
+
+int fileExists(const char *filename)
+{
+
+   FILE *fp = fopen (filename, "r");
+   if (fp!=NULL) fclose (fp);
+
+   return (fp!=NULL);
+}
 void printListNode(list* node){
-                printf("ID - %ld | packnr - %d | pid - %d\n",node->ID,node->inputpacketnr,node->pid);
+                printf("ID - %ld | packnr - %d | pid - %d | bufsize %d | inputFilename %s| functionFilename %s| outputFilename %s| errorFilename %s\n",node->ID,node->packetnr,node->pid,node->bufSize,node->inputFilename,node->functionFilename,node->outputFilename,node->errorFilename);
 
 }
 
@@ -29,13 +39,24 @@ void printList(){
 void addToList(u_long ID){
     list * tmp = malloc(sizeof(list));
     list * iterator = end;
+
+
+
     tmp->ID=ID;
-    tmp->inputpacketnr=0;
+    tmp->packetnr=0;
     tmp->pid=0;
     tmp->next=NULL;
     tmp->prev=NULL;
     
     
+    tmp->inputFilename=malloc(sizeof(char)*180);
+    tmp->functionFilename=malloc(sizeof(char)*180);
+    tmp->outputFilename=malloc(sizeof(char)*180);
+    tmp->errorFilename=malloc(sizeof(char)*180);
+    sprintf(tmp->inputFilename,"data/%lu%s",ID,"_input.txt");
+    sprintf(tmp->functionFilename,"data/%lu%s",ID,"_function.txt");
+    sprintf(tmp->outputFilename,"data/%lu%s",ID,"_output.txt");
+    sprintf(tmp->errorFilename,"data/%lu%s",ID,"_error.txt");
 
     if(iterator==NULL && head==NULL){
         head=tmp;

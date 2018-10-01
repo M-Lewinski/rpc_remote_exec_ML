@@ -1,1 +1,1 @@
-sort -r
+./a.out

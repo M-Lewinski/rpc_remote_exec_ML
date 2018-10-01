@@ -12,9 +12,9 @@ SOURCES_SVC.c =
 SOURCES_SVC.h = 
 SOURCES.x = rpc_remote_exec_ML.x
 
-TARGETS_SVC.c = rpc_remote_exec_ML_svc.c rpc_remote_exec_ML_server.c rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_LL.c rpc_remote_exec_ML_server_startSession.c rpc_remote_exec_ML_server_runExecFunction.c
-TARGETS_CLNT.c = rpc_remote_exec_ML_clnt.c rpc_remote_exec_ML_client.c rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_client_startSession.c rpc_remote_exec_ML_client_runExecFunction.c
-TARGETS = rpc_remote_exec_ML.h rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_clnt.c rpc_remote_exec_ML_svc.c rpc_remote_exec_ML_client.c rpc_remote_exec_ML_server.c rpc_remote_exec_ML_LL.c rpc_remote_exec_ML_client_startSession.c rpc_remote_exec_ML_client_runExecFunction.c rpc_remote_exec_ML_server_startSession.c rpc_remote_exec_ML_server_runExecFunction.c
+TARGETS_SVC.c = rpc_remote_exec_ML_svc.c rpc_remote_exec_ML_server.c rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_LL.c rpc_remote_exec_ML_server_startSession.c rpc_remote_exec_ML_server_runExecFunction.c rpc_remote_exec_ML_server_getExecFunction.c 
+TARGETS_CLNT.c = rpc_remote_exec_ML_clnt.c rpc_remote_exec_ML_client.c rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_client_startSession.c rpc_remote_exec_ML_client_runExecFunction.c rpc_remote_exec_ML_client_getExecFunction.c
+TARGETS = rpc_remote_exec_ML.h rpc_remote_exec_ML_xdr.c rpc_remote_exec_ML_clnt.c rpc_remote_exec_ML_svc.c rpc_remote_exec_ML_client.c rpc_remote_exec_ML_server.c rpc_remote_exec_ML_LL.c rpc_remote_exec_ML_client_startSession.c rpc_remote_exec_ML_client_runExecFunction.c rpc_remote_exec_ML_server_startSession.c rpc_remote_exec_ML_server_runExecFunction.c 
 
 OBJECTS_CLNT = $(SOURCES_CLNT.c:%.c=%.o) $(TARGETS_CLNT.c:%.c=%.o)
 OBJECTS_SVC = $(SOURCES_SVC.c:%.c=%.o) $(TARGETS_SVC.c:%.c=%.o)

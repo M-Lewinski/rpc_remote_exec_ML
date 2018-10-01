@@ -12,9 +12,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "rpc_remote_exec_ML_server_startSession.h"
-#include "rpc_remote_exec_ML_server_runExecFunction.h"
-
 #ifndef SIG_PF
 #define SIG_PF void(*)(int)
 #endif
@@ -100,10 +97,7 @@ main (int argc, char **argv)
 		exit(1);
 	}
 
-
 	svc_run ();
-
-
 	fprintf (stderr, "%s", "svc_run returned");
 	exit (1);
 	/* NOTREACHED */

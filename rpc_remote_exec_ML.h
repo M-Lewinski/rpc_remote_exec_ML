@@ -14,15 +14,9 @@ extern "C" {
 #endif
 
 
-#define INPUT_START 1
-#define INPUT_FUNCTION 2
-#define INPUT_INPUT 3
-#define INPUT_END 4
-
 struct runExecStructRequest {
 	int dataSize;
 	u_long ID;
-	int packetAmount;
 	int packageNR;
 	int packageType;
 	char *data;
@@ -37,14 +31,16 @@ typedef struct runExecStructResponse runExecStructResponse;
 struct getExecStructRequest {
 	u_long ID;
 	int packageNR;
+	int packageNRFromType;
+	int packageType;
 };
 typedef struct getExecStructRequest getExecStructRequest;
 
 struct getExecStructResponse {
 	int dataSize;
-	int packetAmount;
 	int packageNR;
 	int packageType;
+	int end;
 	char *data;
 };
 typedef struct getExecStructResponse getExecStructResponse;

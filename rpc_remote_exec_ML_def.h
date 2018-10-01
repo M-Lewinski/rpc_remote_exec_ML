@@ -1,0 +1,12 @@
+#define INPUT_START 1
+#define INPUT_FUNCTION 2
+#define INPUT_INPUT 3
+#define INPUT_END 4
+
+
+#define OUTPUT_START 1
+#define OUTPUT_OUTPUT 2
+#define OUTPUT_ERROROUTPUT 3
+#define OUTPUT_END 4
+
+#define SERVER_BUFSIZE 12

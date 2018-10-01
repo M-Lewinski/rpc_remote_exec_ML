@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "fcntl.h": "c"
+        "fcntl.h": "c",
+        "rpc_remote_exec_ml_server_getexecfunction.h": "c",
+        "rpc_remote_exec_ml_server_runexecfunction.h": "c",
+        "rpc_remote_exec_ml_def.h": "c"
     }
 }

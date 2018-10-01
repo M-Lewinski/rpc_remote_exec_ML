@@ -1,4 +1,5 @@
 #include "rpc_remote_exec_ML.h"
+#include "rpc_remote_exec_ML_def.h"
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -16,8 +17,7 @@ int initSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int
 	runexecfunction_1_arg.ID=session_ID;
 	runexecfunction_1_arg.packageType=INPUT_START;
 	runexecfunction_1_arg.packageNR=0;
-	runexecfunction_1_arg.dataSize=0;
-	runexecfunction_1_arg.packetAmount=0; // mozliwe ze niepotrzebne
+	runexecfunction_1_arg.dataSize=bufSize;
 
 	//runexecfunction_1_arg.data=NULL; -> tak nie dziala
 	runexecfunction_1_arg.data=(char*)malloc(sizeof(char));
@@ -141,19 +141,22 @@ int runSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int 
 		}
 
 	free(runexecfunction_1_arg.data);
+	
 	return result_2->lastCorrectPackageNR;
 }
 
-void sendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int bufSize){
-	int packageNR=0;
+void sendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int* packetNR,int bufSize){
 
-	packageNR=initSendFunctionToRun(clnt,session_ID,functionToRun,bufSize);
+	*packetNR=initSendFunctionToRun(clnt,session_ID,functionToRun,bufSize);
+	printf("1 posiadam %d\n",*packetNR);
 	
-	packageNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
-	packageNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
-	packageNR=inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
-	packageNR=runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packageNR);
+	*packetNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,*packetNR);
+	printf("2 posiadam %d\n",*packetNR);
+	*packetNR=commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,*packetNR);
+	printf("3 posiadam %d\n",*packetNR);
+	*packetNR=inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,*packetNR);
+	printf("4 posiadam %d\n",*packetNR);
+	*packetNR=runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,*packetNR);
+	printf("5 posiadam %d\n",*packetNR);
 
-	printf("==============================%d\n",packageNR);
-//	printf("test2 - %s\n",clnt);
 }
