@@ -10,6 +10,5 @@ u_long startsession(CLIENT *clnt){
 		clnt_perror (clnt, "call failed");
 	}
 
-	printf("otrzymany id - %lu\n",*result_1);
 	return *result_1;
 }

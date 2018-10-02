@@ -2,14 +2,7 @@
 #include "rpc_remote_exec_ML.h"
 #include "rpc_remote_exec_ML_LL.h"
 
-/*
-typedef struct LLnode {
-    u_long ID;
-    int inputpacketnr;
-    int pid;
-    struct LLnode * next;
-    struct LLnode * prev;
-} list;*/
+
 
 list * head = NULL;
 list * end = NULL;

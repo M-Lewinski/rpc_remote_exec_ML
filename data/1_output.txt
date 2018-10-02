@@ -1,2 +1,0 @@
-uruchomienie funkcji: ./a.out
-jakiswynikzakonczenie funkcji

@@ -23,49 +23,12 @@ void destroyClient(CLIENT *clnt){
 	clnt_destroy (clnt);
 }
 
-void
-rpcremoteexecml_1(char *host)
-{
-	CLIENT *clnt;
-	u_long  *result_1;
-	char *startsession_1_arg;
-	runExecStructResponse  *result_2;
-	runExecStructRequest  runexecfunction_1_arg;
-	getExecStructResponse  *result_3;
-	getExecStructRequest  getexecfunction_1_arg;
-
-#ifndef	DEBUG
-		clnt = clnt_create (host, rpcRemoteExecML, rpcRemoteExecMLVERS, "udp");
-		if (clnt == NULL) {
-			clnt_pcreateerror (host);
-			exit (1);
-		}
-#endif	/* DEBUG */
-
-	result_1 = startsession_1((void*)&startsession_1_arg, clnt);
-	if (result_1 == (u_long *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-
-	printf("otrzymany id - %lu\n",*result_1);
-
-	/*result_2 = runexecfunction_1(&runexecfunction_1_arg, clnt);
-	if (result_2 == (runExecStructResponse *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_3 = getexecfunction_1(&getexecfunction_1_arg, clnt);
-	if (result_3 == (getExecStructResponse *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}*/
-#ifndef	DEBUG
-	clnt_destroy (clnt);
-#endif	 /* DEBUG */
-}
 
 
 int
 main (int argc, char *argv[])
 {
+	int code=0;
 	char *host;
 	CLIENT *clnt;
 	u_long session_ID;
@@ -90,9 +53,9 @@ main (int argc, char *argv[])
 	session_ID=startsession(clnt);
 
 	sendFunctionToRun(clnt,session_ID,functionToExec,&packagerNR,sendBufferSize);
-	getresultFromRemoteFuntion(clnt,session_ID,&packagerNR);
+	code=getresultFromRemoteFuntion(clnt,session_ID,&packagerNR);
 
 	destroyClient(clnt);
 
-exit (0);
+exit (code);
 }
