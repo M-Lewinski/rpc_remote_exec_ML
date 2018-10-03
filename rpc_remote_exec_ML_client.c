@@ -25,8 +25,7 @@ void destroyClient(CLIENT *clnt){
 
 
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
 	int code=0;
 	char *host;

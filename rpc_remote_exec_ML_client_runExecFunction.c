@@ -139,7 +139,6 @@ void sendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int* p
 
 	initSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
 	commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
-	commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
 	inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
 	runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
 

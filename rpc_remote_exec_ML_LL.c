@@ -94,7 +94,7 @@ void removeFromList(u_long ID){
     if(head==curElement){
         head=head->next;
     }
-    if(end=curElement){
+    if(end==curElement){
         end=end->prev;
     }
     if(curElement->prev!=NULL){
