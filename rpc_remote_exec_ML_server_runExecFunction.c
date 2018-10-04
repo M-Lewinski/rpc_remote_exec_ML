@@ -60,15 +60,20 @@ void run(list* node){
 	int inputfile;
 	int outputfile;
 	int errorfile;
-	char functionToRun[180];
-
-
+	
 
 	functionfile = fopen( node->functionFilename , "r");
 	outputfile = open( node->outputFilename, O_WRONLY | O_CREAT, 0644);
 	errorfile = open( node->errorFilename, O_WRONLY | O_CREAT, 0644);
+
+
 	if (functionfile) {
-		fgets(functionToRun, 180, functionfile);
+		fseek(, 0, SEEK_END);
+		int fileSize = ftell(f);
+		fseek(f, 0, SEEK_SET);
+		char* functionToRun = (char*)malloc(fileSize +1);
+		fgets(functionToRun, fileSize, functionfile);
+		functionToRun[fileSize] = 0;
 		dup2(outputfile,1);
 		dup2(errorfile,2);
 

@@ -56,5 +56,5 @@ int main (int argc, char *argv[])
 
 	destroyClient(clnt);
 
-exit (code);
+	exit (code);
 }
