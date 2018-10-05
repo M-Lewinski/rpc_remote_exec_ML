@@ -27,11 +27,11 @@ void destroyClient(CLIENT *clnt){
 
 int main (int argc, char *argv[])
 {
-	int code=0;
-	char *host;
-	CLIENT *clnt;
-	u_long session_ID;
-	char *functionToExec;
+	int code=0; // Zwracany kod wykonywanego programu
+	char *host; // Address servera
+	CLIENT *clnt; 
+	u_long session_ID; // Id klienta
+	char *functionToExec; // nazwa funkcji do wykonania
 	int packagerNR=0;
 
 	int sendBufferSize=1024;
@@ -49,10 +49,10 @@ int main (int argc, char *argv[])
 
 	clnt=createClient(host);
 
-	session_ID=startsession(clnt);
+	session_ID=startsession(clnt); // Otrzymanie Id od servera
 
-	sendFunctionToRun(clnt,session_ID,functionToExec,&packagerNR,sendBufferSize);
-	code=getresultFromRemoteFuntion(clnt,session_ID,&packagerNR);
+	sendFunctionToRun(clnt,session_ID,functionToExec,&packagerNR,sendBufferSize); // Wykonanie funkcji na serverze
+	code=getresultFromRemoteFuntion(clnt,session_ID,&packagerNR); // Uzyskanie wyniku wykonanej funkcji
 
 	destroyClient(clnt);
 

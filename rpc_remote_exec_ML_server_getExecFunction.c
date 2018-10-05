@@ -19,7 +19,7 @@ void getOUTPUT_START(getExecStructRequest *argp,getExecStructResponse  *result){
 
         if(node->packetnr==argp->packageNR-1){
 			node->packetnr=argp->packageNR;
-            waitpidstatus=waitpid(node->pid, &status, WNOHANG);
+            waitpidstatus=waitpid(node->pid, &status, WNOHANG); // Jeżeli funkcja wciąż jest wykonywana to zwraca 0 
             result->end=(waitpidstatus!=0);
 		}else{
 			result->end=0;
@@ -44,10 +44,12 @@ void readFromFile(getExecStructRequest *argp,getExecStructResponse  *result,char
             if(fileToOpen!=NULL){
             tmp=fseek(fileToOpen,node->bufSize*argp->packageNRFromType,SEEK_SET);
             result->dataSize=fread(result->data,1,node->bufSize,fileToOpen);
-            fclose(fileToOpen);}else{
+            fclose(fileToOpen);
+            }else{
                 result->dataSize=0;
                 result->data[0]=0;
             }
+            // Określenie zakończenia pliku na podstawie liczbie wczytanych znaków
             result->end=result->dataSize<node->bufSize;
             result->packageNR=node->packetnr;
 		}else{

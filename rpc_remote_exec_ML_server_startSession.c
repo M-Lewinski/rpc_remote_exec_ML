@@ -5,7 +5,7 @@ u_long maxCurrentID=0;
 
 
 u_long *
-startsession_1_svc(void *argp, struct svc_req *rqstp)
+startsession_1_svc(void *argp, struct svc_req *rqstp) // generowanie nowego Id dla klienta
 {
 	static u_long  result;
 

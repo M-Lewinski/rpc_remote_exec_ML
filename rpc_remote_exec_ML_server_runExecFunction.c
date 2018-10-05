@@ -11,12 +11,12 @@
 
 void caseINPUT_START(runExecStructRequest *argp,runExecStructResponse  *result){
 //		printf("INPUT_START\n");
-		addToList(argp->ID);
-		list* node= searchInList(argp->ID);
-		node->bufSize=argp->dataSize;
-		result->lastCorrectPackageNR=0;
+		addToList(argp->ID); // Dodaj Id do listy dwukierunkowej
+		list* node= searchInList(argp->ID); // Pobierz informacje dotyczące wykonywanego zadaina
+		node->bufSize=argp->dataSize; // Określenie jakiej wielkości buforem będzie prowadzona komunikacja
+		result->lastCorrectPackageNR=0; // Ostatni numer odebranej paczki po stronie servera
 
-
+		// usuwanie plików jeżeli istnieją
 		if(fileExists(node->inputFilename) && remove(node->inputFilename) == -1)
         perror("No input file to remove");
 		if(fileExists(node->functionFilename) && remove(node->functionFilename) == -1)
@@ -30,21 +30,20 @@ void caseINPUT_START(runExecStructRequest *argp,runExecStructResponse  *result){
 void saveToFileInput(runExecStructRequest *argp,runExecStructResponse  *result,int filenameType){
 		list* node;
 		FILE *pFile;
-		char IDstring[80];
 		char *filename;
 //		printf("INPUT_FUNCTION\n");
-		node = searchInList(argp->ID);
-		filename=filenameType==0?node->functionFilename:node->inputFilename;
+		node = searchInList(argp->ID); 
+		// sprawdzenie czy zapisywane dane są wykonywaną funkcją lub strumieniem wejściowym
+		filename=filenameType==0?node->functionFilename:node->inputFilename; 
 		
-
+		// Sprawdzenie czy wysłana paczka jest kolejną oczekiwaną przez serwer
 		if(node->packetnr==argp->packageNR-1){
 			node->packetnr=argp->packageNR;
-			pFile = fopen(filename, "a");
+			pFile = fopen(filename, "a"); // Dodawanie na końcu pliku
 			fprintf(pFile,"%s", argp->data);
 			fclose(pFile);
-		}else{
-//			printf("zly numer\n");
 		}
+
 		result->lastCorrectPackageNR=node->packetnr;
 }
 void caseINPUT_FUNCTION(runExecStructRequest *argp,runExecStructResponse  *result){
@@ -68,13 +67,14 @@ void run(list* node){
 
 
 	if (functionfile) {
+		// Obliczenie wielkości znaków potrzbenych na funkcję
 		fseek(, 0, SEEK_END);
 		int fileSize = ftell(f);
 		fseek(f, 0, SEEK_SET);
 		char* functionToRun = (char*)malloc(fileSize +1);
 		fgets(functionToRun, fileSize, functionfile);
 		functionToRun[fileSize] = 0;
-		dup2(outputfile,1);
+		dup2(outputfile,1); // Duplikacja deskryptora plików
 		dup2(errorfile,2);
 
 		if(fileExists(node->inputFilename)){

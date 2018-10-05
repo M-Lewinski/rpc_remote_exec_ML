@@ -14,13 +14,13 @@ void initSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,in
 
 	//	printf("test2 - %s\n",clnt);
 
-	runexecfunction_1_arg.ID=session_ID;
-	runexecfunction_1_arg.packageType=INPUT_START;
-	runexecfunction_1_arg.packageNR=0;
-	runexecfunction_1_arg.dataSize=bufSize;
+	runexecfunction_1_arg.ID=session_ID; // Id klienta
+	runexecfunction_1_arg.packageType=INPUT_START; 
+	runexecfunction_1_arg.packageNR=0; // number paczki
+	runexecfunction_1_arg.dataSize=bufSize; // wielkosc buffora jakim beda komunikowac sie obie strony
 
 	//runexecfunction_1_arg.data=NULL; -> tak nie dziala
-	runexecfunction_1_arg.data=(char*)malloc(sizeof(char));
+	runexecfunction_1_arg.data=(char*)malloc(sizeof(char)); 
 	runexecfunction_1_arg.data[0]=0;
 
 
@@ -29,15 +29,15 @@ void initSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,in
 		clnt_perror (clnt, "call failed");
 	}
 	free(runexecfunction_1_arg.data);
-	*packetNR=result_2->lastCorrectPackageNR;
+	*packetNR=result_2->lastCorrectPackageNR; // value - 0
 }
 void commandSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int bufSize,int *curremtPackageNR){
 	int result;
 	runExecStructResponse  *result_2=(runExecStructResponse*)malloc(sizeof(runExecStructResponse));
 	runExecStructRequest  runexecfunction_1_arg;
-	int shortenBufSize=bufSize-1;
-	int packetAmount = ceil(strlen(functionToRun)/(float)shortenBufSize);
-	char buf[bufSize];
+	int shortenBufSize=bufSize-1; // Zapewnienie, że wysyłany buffor na końcu ma 0
+	int packetAmount = ceil(strlen(functionToRun)/(float)shortenBufSize); // Obliczenie liczby paczek do wysłania
+	char buf[bufSize]; 
 
 
 	runexecfunction_1_arg.ID=session_ID;
@@ -51,8 +51,8 @@ void commandSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun
 		runexecfunction_1_arg.packageNR=result_2->lastCorrectPackageNR+1;
 
 		sprintf(runexecfunction_1_arg.data,"%.*s", shortenBufSize, functionToRun + (shortenBufSize*(runexecfunction_1_arg.packageNR-1)));
-		if(shortenBufSize*(runexecfunction_1_arg.packageNR)>strlen(functionToRun)){
-			runexecfunction_1_arg.data[strlen(functionToRun)-(shortenBufSize*(runexecfunction_1_arg.packageNR-1))]=0;
+		if(shortenBufSize*(runexecfunction_1_arg.packageNR)>strlen(functionToRun)){ // Sprawdzenie czy ostatnia paczka nie jest mniejsza od buffora
+			runexecfunction_1_arg.data[strlen(functionToRun)-(shortenBufSize*(runexecfunction_1_arg.packageNR-1))]=0; 
 		}else
 		runexecfunction_1_arg.data[shortenBufSize]=0;
 
@@ -83,8 +83,8 @@ void inputSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,i
 
 	result_2->lastCorrectPackageNR=*curremtPackageNR;
 
-	while ((readedchars=read(stdin->_fileno,runexecfunction_1_arg.data,bufSize-1))>0){
-		runexecfunction_1_arg.packageNR=result_2->lastCorrectPackageNR+1;
+	while ((readedchars=read(stdin->_fileno,runexecfunction_1_arg.data,bufSize-1))>0){ // Czytanie danych ze strumienia wejściowego
+		runexecfunction_1_arg.packageNR=result_2->lastCorrectPackageNR+1; 
 		runexecfunction_1_arg.data[readedchars]=0;
 
 		do{
@@ -92,11 +92,12 @@ void inputSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,i
 		if (result_2 == (runExecStructResponse *) NULL) {
 			clnt_perror (clnt, "call failed");
 		}
+		// 
 		if(result_2->lastCorrectPackageNR<runexecfunction_1_arg.packageNR-1 || result_2->lastCorrectPackageNR>runexecfunction_1_arg.packageNR){
 			perror("zly numer paczki");
 			exit(EXIT_FAILURE);
 		}
-		}while(result_2->lastCorrectPackageNR<runexecfunction_1_arg.packageNR);
+		}while(result_2->lastCorrectPackageNR<runexecfunction_1_arg.packageNR); // wysylanie paczki aż się uda
 		//readedchars=0;
 	}
 	*curremtPackageNR=result_2->lastCorrectPackageNR;
@@ -107,8 +108,6 @@ void runSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int
 
 	runExecStructResponse  *result_2;
 	runExecStructRequest  runexecfunction_1_arg;
-
-	//	printf("test2 - %s\n",clnt);
 
 	runexecfunction_1_arg.ID=session_ID;
 	runexecfunction_1_arg.packageType=INPUT_END;
@@ -137,10 +136,10 @@ void runSendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int
 
 void sendFunctionToRun(CLIENT *clnt,u_long session_ID,char* functionToRun,int* packetNR,int bufSize){
 
-	initSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
-	commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
-	inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
-	runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR);
+	initSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR); // Rozpoczęcie procedury uruchomienia funkcji na serverze
+	commandSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR); // Wyslanie wykonywanej funkcji do servera
+	inputSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR); // Wysłanie strumienia wejściowego do servera
+	runSendFunctionToRun(clnt,session_ID,functionToRun,bufSize,packetNR); // Zlecenie wykonania wysłanej funkcji
 
 
 }

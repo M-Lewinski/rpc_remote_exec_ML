@@ -40,7 +40,7 @@ void printResult(CLIENT *clnt,u_long session_ID,int *packetNR,int packageType,in
 
 
     getexecfunction_1_arg.ID=session_ID;
-    getexecfunction_1_arg.packageNRFromType=-1;
+    getexecfunction_1_arg.packageNRFromType=-1; // określa ostatnie miejsce fseek dla pliku
     getexecfunction_1_arg.packageType=packageType;
 
 
@@ -55,7 +55,7 @@ void printResult(CLIENT *clnt,u_long session_ID,int *packetNR,int packageType,in
                 clnt_perror (clnt, "call failed");
             }
         }while(result_3->packageNR<getexecfunction_1_arg.packageNR);
-        write(printType,result_3->data,result_3->dataSize);
+        write(printType,result_3->data,result_3->dataSize); // wypisanie na odpowiednim strumieniu
 
     }while(!(result_3->end));
 }
